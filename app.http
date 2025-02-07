@@ -1,0 +1,4 @@
+
+GET http://localhost:3000/todo/?status=TO%20DO
+
+# http://localhost:3000/todos/?status=TO%20DO
