@@ -2,7 +2,11 @@ const express = require('express')
 const path = require("path")
 const {open} = require('sqlite')
 const sqlite3 = require('sqlite3')
+const format = require('date-fns/format')
+const isValid = require('date-fns/isValid')
+
 const app = express()
+app.use(express.json())
 
 const dbPath = path.join(__dirname,"todoApplication.db")
 
@@ -23,6 +27,15 @@ const initializeDbAndServer = async() =>{
 }
 
 initializeDbAndServer()
+
+    // "id": 3,
+    // "task_name": "Clean the garden",
+    // "priority": "LOW",
+    // "status": "TO DO",
+    // "category": "HOME",
+    // "task_date": "2021-02-22"
+
+// API 1
 
 app.get('/todo/' , async (request,response) => {
     const {priority,status,search_q} = request.query
@@ -62,3 +75,22 @@ app.get('/todo/' , async (request,response) => {
 
 });
 
+// API 2
+
+app.get('/todo/:id',async(request,response)=>{
+
+    const {id} = request.params;
+
+    const searchQuery = `
+    SELECT * FROM todo WHERE id=?
+    `;
+
+    try{
+        const searchResult = await db.get(searchQuery,[id]);
+        response.send(searchResult)
+    }catch(e){
+        console.log(`ERROR is :${e}`)
+    }
+
+
+})
