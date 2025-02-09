@@ -2,8 +2,8 @@ const express = require('express')
 const path = require("path")
 const {open} = require('sqlite')
 const sqlite3 = require('sqlite3')
-const format = require('date-fns/format')
-const isValid = require('date-fns/isValid')
+const {format,isValid} = require('date-fns')
+// const isValid = require('date-fns/isValid')
 
 const app = express()
 app.use(express.json())
@@ -91,6 +91,32 @@ app.get('/todo/:id',async(request,response)=>{
     }catch(e){
         console.log(`ERROR is :${e}`)
     }
+})
 
 
+// API 3
+
+app.get('/agenda/',async(request,response)=>{
+    const {date} = request.query
+    if(!date){
+        return response.status(400).send({error:"please provide a valid date parameter"});
+    }
+
+    const parsedDate = parseISO(date);
+    console.log(parsedDate);
+
+    if(!isValid(parsedDate)){
+        return response.status(400).send({error:"Invalid date format.Use YYYY-MM-DD."})
+    }
+
+    const formattedDate = format(parsedDate,'yyyy-MM-dd')
+
+    const searchQuery = `SELECT * FROM todo WHERE task_date=?`;
+
+    try{
+        const searchResult = await db.all(searchQuery,[formattedDate])
+        response.send(searchResult)
+    }catch(e){
+        response.send(`ERROR:${e}`)
+    }
 })
