@@ -43,21 +43,22 @@ GET http://localhost:3000/todo/3
 
 ###
 
--API 3 Returns a list of all todos with a specific due date in the query parameter /agenda/?date=2021-12-12
+# -API 3 Returns a list of all todos with a specific due date in the query parameter /agenda/?date=2021-12-12
 GET http://localhost:3000/agenda/?date=2021-2-22
 
 ###
 
--API 4 Create a todo in the todo table
-POST http://localhost:3000/todo/
+# -API 4 Create a todo in the todo table
+POST http://localhost:3000/todo
 Content-Type: application/json
+
 {
-  "id": 6,
-  "todo": "Buy fish",
+  "id": 8,
+  "task_name": "Buy fish",
   "priority": "LOW",
   "status": "TO DO",
   "category": "HOME",
-  "dueDate": "2021-02-22"
+  "task_date": "2021-02-22"
 }
 
 ###

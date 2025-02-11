@@ -2,7 +2,7 @@ const express = require('express')
 const path = require("path")
 const {open} = require('sqlite')
 const sqlite3 = require('sqlite3')
-const {format,isValid} = require('date-fns')
+const {format,isValid,parse} = require('date-fns')
 // const isValid = require('date-fns/isValid')
 
 const app = express()
@@ -102,7 +102,9 @@ app.get('/agenda/',async(request,response)=>{
         return response.status(400).send({error:"please provide a valid date parameter"});
     }
 
-    const parsedDate = parseISO(date);
+    // const parsedDate = parseISO(date);
+    // const parsedDate = new Date(date)
+    const parsedDate = parse(date,'yyyy-MM-dd',new Date())
     console.log(parsedDate);
 
     if(!isValid(parsedDate)){
@@ -120,3 +122,43 @@ app.get('/agenda/',async(request,response)=>{
         response.send(`ERROR:${e}`)
     }
 })
+
+// app.post('/todo/',async(request,response)=>{
+//     const {id,task_name,priority,status,category,task_date} = request.body ;
+//     const postQuery = `INSERT INTO todo (id,task_name,priority,status,category,task_date) VALUES (?,?,?,?,?,?)`
+    
+//     try{
+//         const queryResult = await db.run(postQuery,[id,task_name,priority,status,category,task_date])
+//         response.send(queryResult)
+//     }catch(e){
+//         console.log(`Error: ${e}`)
+//     }
+// })
+
+app.post('/todo/', async (request, response) => {
+    const { id, task_name, priority, status, category, task_date } = request.body;
+
+    if (!id || !task_name || !priority || !status || !category || !task_date) {
+        return response.status(400).send({ error: "All fields are required." });
+    }
+
+    const parsedDate = parse(task_date, 'yyyy-MM-dd', new Date());
+    if (!isValid(parsedDate)) {
+        return response.status(400).send({ error: "Invalid date format. Use YYYY-MM-DD." });
+    }
+
+    const formattedDate = format(parsedDate, 'yyyy-MM-dd');
+
+    const postQuery = `
+      INSERT INTO todo (id, task_name, priority, status, category, task_date) 
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    try {
+        const queryResult = await db.run(postQuery, [id, task_name, priority, status, category, formattedDate]);
+        response.status(201).send({ message: "Todo added successfully", todoId: queryResult.lastID });
+    } catch (e) {
+        console.error(`Error: ${e.message}`);
+        response.status(500).send({ error: "Internal Server Error" });
+    }
+});
