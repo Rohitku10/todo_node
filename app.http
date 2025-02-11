@@ -68,6 +68,7 @@ Content-Type: application/json
 # -Scenario 1
 PUT http://localhost:3000/todo/2
 Content-Type: application/json
+
 {
   "status": "DONE"
 }

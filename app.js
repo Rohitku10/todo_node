@@ -3,6 +3,7 @@ const path = require("path")
 const {open} = require('sqlite')
 const sqlite3 = require('sqlite3')
 const {format,isValid,parse} = require('date-fns')
+const { request } = require('http')
 // const isValid = require('date-fns/isValid')
 
 const app = express()
@@ -162,3 +163,34 @@ app.post('/todo/', async (request, response) => {
         response.status(500).send({ error: "Internal Server Error" });
     }
 });
+
+// app.put('/todo/:id', async (request,response)=>{
+//     const {id} = request.params
+//     const {status} = request.body
+//     const putQuery = `UPDATE todo SET status = ? WHERE id = ?`;
+
+//     try{
+//         putResult = await db.run(putQuery,[status,id])
+//         response.send("todo updated")
+//     }catch(e){
+//         console.log(`Error: ${e}`)
+//     }
+
+// })
+
+
+app.put('/todo/:id', async (request,response)=>{
+    const {id} = request.params
+    const {status,priority,task_name} = request.body
+    const putQuery = `UPDATE todo SET status = ? WHERE id = ?`;
+
+    try{
+        putResult = await db.run(putQuery,[status,id])
+        response.send("todo updated")
+    }catch(e){
+        console.log(`Error: ${e}`)
+    }
+
+})
+
+
