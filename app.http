@@ -75,8 +75,10 @@ Content-Type: application/json
 
 # -Scenario 2
 ###
+
 PUT http://localhost:3000/todo/2
 Content-Type: application/json
+
 {
   "priority": "HIGH"
 }
@@ -85,8 +87,9 @@ Content-Type: application/json
 ###
 PUT http://localhost:3000/todo/2
 Content-Type: application/json
+
 {
-  "todo": "Clean the garden"
+  "task_name": "Clean the garden"
 }
 
 
@@ -94,6 +97,7 @@ Content-Type: application/json
 ###
 PUT http://localhost:3000/todo/2
 Content-Type: application/json
+
 {
   "category": "LEARNING"
 }
@@ -102,8 +106,9 @@ Content-Type: application/json
 ###
 PUT http://localhost:3000/todo/2
 Content-Type: application/json
+
 {
-  "dueDate": "2021-01-12"
+  "task_date": "2021-01-12"
 }
 
 ###

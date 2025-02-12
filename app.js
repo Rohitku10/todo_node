@@ -181,11 +181,35 @@ app.post('/todo/', async (request, response) => {
 
 app.put('/todo/:id', async (request,response)=>{
     const {id} = request.params
-    const {status,priority,task_name} = request.body
-    const putQuery = `UPDATE todo SET status = ? WHERE id = ?`;
+    const {status,priority,task_name,category,task_date} = request.body
+    let putQuery = ''
+    let updateData = ''
+    if(status){
+        putQuery = `UPDATE todo SET status = ? WHERE id = ?`;
+        updateData = status;
+    }
+    else if(priority){
+        putQuery = `UPDATE todo SET priority = ? WHERE id = ?`;
+        updateData = priority;
+    }
+    else if(task_name){
+        putQuery = `UPDATE todo SET task_name = ? WHERE id = ?`;
+        updateData = task_name;
+    }
+    else if(category){
+        putQuery = `UPDATE todo SET category = ? WHERE id = ?`;
+        updateData = category;
+    }
+    else if(task_date){
+        putQuery = `UPDATE todo SET task_date = ? WHERE id = ?`;
+        updateData = task_date;
+    }
+    else{
+        response.status(400).send({Error:`Invalid update request`})
+    }
 
     try{
-        putResult = await db.run(putQuery,[status,id])
+        putResult = await db.run(putQuery,[updateData,id])
         response.send("todo updated")
     }catch(e){
         console.log(`Error: ${e}`)
