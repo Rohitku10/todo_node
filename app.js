@@ -124,17 +124,7 @@ app.get('/agenda/',async(request,response)=>{
     }
 })
 
-// app.post('/todo/',async(request,response)=>{
-//     const {id,task_name,priority,status,category,task_date} = request.body ;
-//     const postQuery = `INSERT INTO todo (id,task_name,priority,status,category,task_date) VALUES (?,?,?,?,?,?)`
-    
-//     try{
-//         const queryResult = await db.run(postQuery,[id,task_name,priority,status,category,task_date])
-//         response.send(queryResult)
-//     }catch(e){
-//         console.log(`Error: ${e}`)
-//     }
-// })
+// API 4
 
 app.post('/todo/', async (request, response) => {
     const { id, task_name, priority, status, category, task_date } = request.body;
@@ -164,19 +154,7 @@ app.post('/todo/', async (request, response) => {
     }
 });
 
-// app.put('/todo/:id', async (request,response)=>{
-//     const {id} = request.params
-//     const {status} = request.body
-//     const putQuery = `UPDATE todo SET status = ? WHERE id = ?`;
-
-//     try{
-//         putResult = await db.run(putQuery,[status,id])
-//         response.send("todo updated")
-//     }catch(e){
-//         console.log(`Error: ${e}`)
-//     }
-
-// })
+// API 5
 
 
 app.put('/todo/:id', async (request,response)=>{
@@ -217,4 +195,16 @@ app.put('/todo/:id', async (request,response)=>{
 
 })
 
+// API 6
 
+app.delete('/todo/:id',async (request,response)=>{
+    const {id} = request.params
+
+    const deleteQuery = `DELETE FROM todo WHERE id=?`;
+    try{
+        const deleteResult = await db.run(deleteQuery,[id])
+        response.send('todo deleted')
+    }catch(e){
+        response.status(500).send(`Error : ${e}`)
+    }
+})
